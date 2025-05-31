@@ -1,71 +1,81 @@
-const products = JSON.parse(localStorage.getItem("products")) || [
-  {
-    name: "Турецкая рубашка",
-    category: "Одежда",
-    price: 150,
-    image: "https://via.placeholder.com/200x160?text=Рубашка",
-  },
-  {
-    name: "Смарт-часы",
-    category: "Техника",
-    price: 320,
-    image: "https://via.placeholder.com/200x160?text=Часы",
-  }
-];
+// Ключи для localStorage
+const STORAGE_KEY = 'turkiyaModeProducts';
+const THEME_KEY = 'turkiyaModeTheme';
 
-function renderProducts() {
-  const list = document.getElementById("product-list");
-  list.innerHTML = "";
-  products.forEach((p, i) => {
-    const card = document.createElement("div");
-    card.className = "card";
+const productListEl = document.getElementById('product-list');
+const searchInput = document.getElementById('search');
+const themeToggle = document.getElementById('themeToggle');
+
+let products = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+
+// Отобразить товары (с фильтрацией по поиску)
+function renderProducts(filter = '') {
+  productListEl.innerHTML = '';
+
+  const filtered = products.filter(p =>
+    p.title.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  if (filtered.length === 0) {
+    productListEl.innerHTML = `<p>Товаров не найдено 😞</p>`;
+    return;
+  }
+
+  filtered.forEach(({title, price, image}) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
     card.innerHTML = `
-      <img src="${p.image}" alt="${p.name}">
-      <h3>${p.name}</h3>
-      <p>💵 ${p.price} сомони</p>
-      <button onclick="order(${i})">📲 Заказать</button>
+      <img src="${image}" alt="${title}" />
+      <h3>${title}</h3>
+      <p>${price} TJS</p>
+      <button onclick="orderProduct('${title}')">Заказать</button>
     `;
-    list.appendChild(card);
+    productListEl.appendChild(card);
   });
 }
 
-function order(i) {
-  const product = products[i];
-  const msg = `Здравствуйте! Я хочу заказать: ${product.name} (${product.price} сомони)`;
-  const telegram = `https://t.me/Ubayda_1507?text=${encodeURIComponent(msg)}`;
-  const whatsapp = `https://wa.me/992905746633?text=${encodeURIComponent(msg)}`;
-  window.open(confirm("Оформить заказ через Telegram?") ? telegram : whatsapp, "_blank");
+// Функция оформления заказа в Telegram и WhatsApp
+function orderProduct(title) {
+  const telegramUsername = 'Ubayda_1507';
+  const whatsappNumber = '+992905746633';
+
+  const message = encodeURIComponent(`Здравствуйте! Я хочу заказать товар: "${title}"`);
+
+  const telegramLink = `https://t.me/${telegramUsername}?text=${message}`;
+  const whatsappLink = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${message}`;
+
+  // Показываем пользователю выбор платформы заказа
+  if (confirm('Вы хотите заказать через Telegram? Нажмите "Отмена" для WhatsApp.')) {
+    window.open(telegramLink, '_blank');
+  } else {
+    window.open(whatsappLink, '_blank');
+  }
 }
 
-document.getElementById("themeToggle").onclick = () => {
-  document.body.classList.toggle("dark");
-  localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-};
+// Поиск по товарам в реальном времени
+searchInput.addEventListener('input', () => {
+  renderProducts(searchInput.value);
+});
 
-document.getElementById("adminToggle").onclick = () => {
-  const pass = prompt("Введите пароль админа:");
-  if (pass === "admin123") {
-    document.getElementById("admin-panel").style.display = "block";
+// Переключение темы
+function loadTheme() {
+  const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark');
   } else {
-    alert("Неверный пароль!");
+    document.body.classList.remove('dark');
   }
-};
+}
 
-document.getElementById("product-form").onsubmit = (e) => {
-  e.preventDefault();
-  const name = document.getElementById("name").value;
-  const category = document.getElementById("category").value;
-  const price = document.getElementById("price").value;
-  const image = document.getElementById("image").value;
-  products.push({ name, category, price, image });
-  localStorage.setItem("products", JSON.stringify(products));
-  renderProducts();
-  e.target.reset();
-};
+function toggleTheme() {
+  document.body.classList.toggle('dark');
+  const newTheme = document.body.classList.contains('dark') ? 'dark' : 'light';
+  localStorage.setItem(THEME_KEY, newTheme);
+}
 
-(function init() {
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark");
-  }
-  renderProducts();
-})();
+themeToggle.addEventListener('click', toggleTheme);
+
+// Инициализация
+loadTheme();
+renderProducts();
