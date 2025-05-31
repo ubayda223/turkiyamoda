@@ -2,34 +2,26 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TurkiyaMode 🛍️</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
     <h1>TurkiyaMode 🛍️</h1>
-    <button id="themeToggle">🌓 Тема</button>
-    <button id="adminToggle">🔒 Админ</button>
+    <input type="text" id="search" placeholder="🔍 Поиск товаров..." />
+    <div class="actions">
+      <button id="themeToggle">🌓</button>
+      <a href="admin.html" class="admin-link">⚙️ Админ</a>
+    </div>
   </header>
 
   <main>
     <section id="product-list"></section>
-
-    <section id="admin-panel" style="display: none;">
-      <h2>🛠️ Панель Админа</h2>
-      <form id="product-form">
-        <input type="text" placeholder="Название товара" id="name" required />
-        <input type="text" placeholder="Категория" id="category" required />
-        <input type="number" placeholder="Цена" id="price" required />
-        <input type="url" placeholder="Ссылка на фото" id="image" required />
-        <button type="submit">➕ Добавить</button>
-      </form>
-    </section>
   </main>
 
   <footer>
-    <p>© 2025 TurkiyaMode. Made with ❤️ in Tajikistan.</p>
+    <p>© 2025 TurkiyaMode. Made with ❤️</p>
   </footer>
 
   <script src="script.js"></script>
