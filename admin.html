@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Админ • TurkiyaMode</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>⚙️ Админ-панель</h1>
+    <a href="index.html" class="back-link">← Назад в магазин</a>
+  </header>
+
+  <main>
+    <form id="addProductForm">
+      <input type="text" id="title" placeholder="Название товара" required />
+      <input type="text" id="price" placeholder="Цена" required />
+      <input type="text" id="image" placeholder="URL фото" required />
+      <button type="submit">➕ Добавить</button>
+    </form>
+    <button id="clearProducts">🗑️ Очистить все товары</button>
+  </main>
+
+  <footer>
+    <p>© 2025 TurkiyaMode Admin</p>
+  </footer>
+
+  <script src="admin.js"></script>
+</body>
+</html>
